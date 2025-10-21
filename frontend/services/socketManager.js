@@ -1,5 +1,11 @@
 import { io } from "socket.io-client";
 
+//To see if it's with development mode or not
+const socketURL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:3000"
+    : "http://backend:3000";
+
 export default class SocketManager {
   constructor() {
     this.socket = null;
@@ -7,7 +13,7 @@ export default class SocketManager {
   }
 
   connect() {
-    this.socket = io("http://localhost:3000");
+    this.socket = io(socketURL);
 
     this.socket.on("connect", () => {
       console.log("Connected to server!");
