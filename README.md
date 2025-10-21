@@ -32,3 +32,26 @@ node server.js
 Note: The backend server will listen to the following adress: `http://localhost:3000`
 
 You're completely free to change the server port, of the backend or of the frontend to which you prefer
+
+# Setting up for production
+
+For production on the other hand you need to do the following:
+
+## Minimize and build frontend for production
+
+```sh
+cd frontend
+npm run build
+```
+The source files will now be available at: `frontend/dist`
+
+## Run node server
+
+You can see in the configuration that you just need to get your server up and running, since it's already listening for the `dist` folder
+
+```sh
+cd backend
+node server.js
+```
+
+Then go to `http:localhost:3000` or whatever port you're using and you can see the changes in production as well.
