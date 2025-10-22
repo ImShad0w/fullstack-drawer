@@ -10,44 +10,47 @@
   <canvas ref="foregroundRef" class="foreground"></canvas>
 </template>
 <script setup>
-import { onMounted, ref } from "vue";
-import SocketManager from "../../services/socketManager";
+import { onMounted, ref, inject } from "vue";
 
-//Connect to the manager
-const manager = new SocketManager();
-manager.connect();
-
+const manager = inject("socketManager");
 //For storing the users
 const users = ref({});
 const user = ref({});
 //Socket callback block
-function handleUsersUpdate(data) {
-  users.value = data;
-}
 
 function handleUserData(data) {
   user.value = data;
 }
 
 function handleUserMovement(data) {
-  users.value = data;
+  users.value = data.sockets;
   drawUsersPointers();
 }
+
 function handleUserDrawings(data) {
   const { userId, circle } = data;
   if (!users.value[userId]) return;
   users.value[userId].trail.push(circle);
-  renderUsersDrawings();
 }
+
+function getUsersInRoom(data) {
+  manager.emit("getUsersInRoom", data);
+}
+
+function checkForUsersInRoom(data) {
+  users.value = data;
+}
+
 //Callsback and stores updated users on event
-manager.on("updateUsers", handleUsersUpdate);
 manager.on("userData", handleUserData);
 manager.on("updateUsersPositions", handleUserMovement);
 manager.on("circleAdded", handleUserDrawings);
+manager.on("joinedRoom", getUsersInRoom);
+manager.on("usersInRoom", checkForUsersInRoom);
+
 //Ask for username
 let username = prompt("Afegeix un nom d'usuari:");
 manager.emit("addUsername", username);
-
 //Drawing logic
 const foregroundRef = ref(null);
 const backgroundRef = ref(null);
@@ -98,7 +101,7 @@ function drawCircle(event) {
   const color = user.value?.color || "red";
 
   bgCtx.beginPath();
-  bgCtx.arc(x, y, 20, 0, Math.PI * 2);
+  bgCtx.arc(x, y, 10, 0, Math.PI * 2);
   bgCtx.fillStyle = color;
   bgCtx.fill();
   manager.emit("circleDrawn", { x: x, y: y });
