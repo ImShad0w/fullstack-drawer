@@ -12,7 +12,26 @@ Fun app that let's users paint on the same canvas in real time!
 
 # Setting up for development
 
-To be able to use this dev environment first do the following commands:
+You have the choice between doing it manually or automated by docker
+
+# Automated setup
+For the automated setup we have created a docker-compose.yml
+
+## Run docker-compose for dev
+
+```sh
+docker-compose up -d
+```
+
+Or if you have another docker setup:
+
+```sh
+docker compose up -d
+```
+
+This part will be for those who prefer manual setup
+
+# Manual setup
 
 ## Frontend setup
 ```sh
@@ -32,6 +51,7 @@ node server.js
 Note: The backend server will listen to the following adress: `http://localhost:3000`
 
 You're completely free to change the server port, of the backend or of the frontend to which you prefer
+
 
 # Setting up for production
 
